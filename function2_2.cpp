@@ -14,15 +14,16 @@ int function2_2() {
 	int i = 0;
 	
 
-	//set degree for each key to 0
+	//initialize degreeMap: set degree for each key to 0
 	for (i = 0; i <= KEY_MAX; ++i) {
 		degreeMap[i] = 0;
 	}
 	i = 0;
 	cout << "degreeMap initialized!" << endl;//TESTING
-	
 
 	parseInData(degreeMap, providerMap);
+
+	cout << "all data parsed into maps!" << endl;
 	
 	displayGraph2Data(degreeMap);
 	
@@ -103,10 +104,46 @@ int parseInData(map<int, int>& degreeMap, map<int, vector<int>>& providerMap) {
 int displayGraph2Data(map<int, int>& degreeMap) {
 	int total = 0, one = 0, two_five = 0, five_hundred = 0, 
 		hundred_2hundred = 0, twohundred_thousand = 0, thousand_plus = 0;
+	int deg;
 
-	/*for (int i = 0; i <= KEY_MAX; ++i) {
+	for (int i = 0; i <= KEY_MAX; ++i) {
+		deg = degreeMap[i];
+		
+		if (deg < 1);
+		else if (deg == 1) {
+			one++; total++;
+		}
+		else if (deg <= 5) {
+			two_five++; total++;
+		}
+		else if (deg <= 100) {
+			five_hundred++; total++;
+		}
+		else if (deg <= 200) {
+			hundred_2hundred++; total++;
+		}
+		else if (deg <= 1000) {
+			twohundred_thousand++; total++;
+		}
+		else if (deg > 1000) {
+			thousand_plus++; total++;
+		}
+		
+	}
 
-	}*/
+	cout << "Graph 2 Data: AS Node Degree Distribution" << endl << endl;
+	cout << "BINS" << endl;
+	cout << "1\t\t" << one << endl;
+	cout << "2-5\t\t" << two_five << endl;
+	cout << "5-100\t\t" << five_hundred << endl;
+	cout << "100-200\t\t" << hundred_2hundred << endl;
+	cout << "200-1000\t" << twohundred_thousand << endl;
+	cout << "1000+\t\t" << thousand_plus << endl << endl;
+	cout << "total AS nodes by variable: " << total << endl;
+	cout << "total AS nodes by sum: \t" << one + two_five + five_hundred + hundred_2hundred
+		+ twohundred_thousand + thousand_plus << endl;
+
+
 
 	return 1;
 }
