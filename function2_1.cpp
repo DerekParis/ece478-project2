@@ -1,5 +1,5 @@
 /*
-Takes input from input.txt
+Takes input from classification-input.txt
 Classifies each line by its type
 Return totals for each type, then percentage of whole for each type
 */
@@ -11,7 +11,7 @@ int function2_1(){
 	string line;
 	int total = 0, transitAccess = 0, enterprise = 0, content = 0;
 
-	inputFile.open("input.txt", ios::out);
+	inputFile.open("classification-input.txt", ios::out);
 
 	if (!inputFile) {
 		cout << "ERROR: file not properly open" << endl;

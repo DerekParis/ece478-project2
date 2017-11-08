@@ -14,4 +14,6 @@ int main() {
 
 	function2_1();
 
+	function2_2();
+
 }
