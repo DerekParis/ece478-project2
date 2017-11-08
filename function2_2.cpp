@@ -5,7 +5,9 @@ int parseInData(map<int, int>& degreeMap, map<int, vector<int>>& providerMap);
 
 int updateMaps(int as1, int as2, bool p2p, map<int, int>& degreeMap, map<int, vector<int>>& providerMap);
 
-int displayGraph2Data(map<int, int>& degreeMap);
+int displayGraph2Data(map<int, int> degreeMap);
+
+int displayGraph4Data(map<int, int> degreeMap, map<int, vector<int>> providerMap);
 
 int function2_2() {
 
@@ -26,6 +28,8 @@ int function2_2() {
 	cout << "all data parsed into maps!" << endl;
 	
 	displayGraph2Data(degreeMap);
+
+	displayGraph4Data(degreeMap, providerMap);
 	
 	//TESTING
 	//cout << "key:2 degree:" << degreeMap[2] << endl;//
@@ -101,7 +105,7 @@ int parseInData(map<int, int>& degreeMap, map<int, vector<int>>& providerMap) {
 	return 1;
 }
 
-int displayGraph2Data(map<int, int>& degreeMap) {
+int displayGraph2Data(map<int, int> degreeMap) {
 	int total = 0, one = 0, two_five = 0, five_hundred = 0, 
 		hundred_2hundred = 0, twohundred_thousand = 0, thousand_plus = 0;
 	int deg;
@@ -146,4 +150,22 @@ int displayGraph2Data(map<int, int>& degreeMap) {
 
 
 	return 1;
+}
+
+//FIX: NEED TO DEFINE PEER.. not sure if it's just late, but I don't see how an AS could have degree >0 and no customers, but no peers
+int displayGraph4Data(map<int, int> degreeMap, map<int, vector<int>> providerMap) {
+	int total = 0, transit = 0, enterprise = 0, content = 0;
+
+	for (int i = 0; i <= KEY_MAX; ++i) {
+		if (!providerMap[i].empty()) {
+			transit++; total++;
+		}
+		/*else if () {
+			//IF CONTENT AS
+		}*/
+		//else if () {
+		//	//IF ENTERPRISE AS
+		//}
+
+	}
 }
