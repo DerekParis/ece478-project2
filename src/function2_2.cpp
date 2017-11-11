@@ -1,9 +1,9 @@
-#include "Header.h"
+#include "header.h"
 #define KEY_MAX 396450
 
-int parseInData(map<int, int>& degreeMap, map<int, vector<int>>& providerMap);
+int parseInData(map<int, int> &degreeMap, map<int, vector<int>> &providerMap);
 
-int updateMaps(int as1, int as2, bool p2p, map<int, int>& degreeMap, map<int, vector<int>>& providerMap);
+int updateMaps(int as1, int as2, bool p2p, map<int, int> &degreeMap, map<int, vector<int>> &providerMap);
 
 int displayGraph2Data(map<int, int> degreeMap);
 
@@ -60,14 +60,14 @@ int updateMaps(int as1, int as2, bool p2p, map<int, int>& degreeMap, map<int, ve
 	return 1;
 }
 
-int parseInData(map<int, int>& degreeMap, map<int, vector<int>>& providerMap) {
+int parseInData(map<int, int> &degreeMap, map<int, vector<int>> &providerMap) {
 	ifstream inputFile;
 	string line;
 	int i = 0;
 	string as1, as2;
 	bool p2p;
 
-	inputFile.open("relationship-input.txt", ios::out);
+	inputFile.open("input/relationship-input.txt", ios::out);
 
 	if (!inputFile) {
 		cout << "ERROR: file not properly open" << endl;

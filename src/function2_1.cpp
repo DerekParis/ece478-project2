@@ -4,14 +4,14 @@ Classifies each line by its type
 Return totals for each type, then percentage of whole for each type
 */
 
-#include "Header.h"
+#include "header.h"
 
 int function2_1(){
 	ifstream inputFile;
 	string line;
 	int total = 0, transitAccess = 0, enterprise = 0, content = 0;
 
-	inputFile.open("classification-input.txt", ios::out);
+	inputFile.open("input/classification-input.txt", ios::out);
 
 	if (!inputFile) {
 		cout << "ERROR: file not properly open" << endl;

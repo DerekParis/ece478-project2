@@ -4,16 +4,18 @@ Created on:	11.7.2017
 */
 
 
-#include "Header.h"
-
-
-using namespace std;
-
+#include "graph.hpp"
+#include "header.h"
 
 int main() {
-
-	//function2_1();
-
-	function2_2();
-
+    Graph AS_graph;
+    
+    AS_graph.printGraphData1();
+    AS_graph.printGraphData2();
+//    AS_graph.printGraphData3();
+//    AS_graph.printGraphData4();
+//    AS_graph.printTableData1();
+//    AS_graph.printTableData2();
+//    AS_graph.printTableData3();
+    
 }
