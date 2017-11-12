@@ -34,18 +34,19 @@ void Graph::printGraphData1(){
         }
     }
     
-    cout << "Type Totals:" << endl;
-    cout << "Transit/Access\t" << numTransit << endl;
-    cout << "Enterprise\t" << numEnterprise << endl;
-    cout << "Content\t\t" << numContent << endl;
-    cout << "Total by Sum\t" << numTransit + numContent + numEnterprise << endl;
-    cout << "Total Int Variable\t" << total << endl << endl;
+    cout << "----------> GRAPH DATA 1 <----------" << endl;
+    cout << "\tType Totals:" << endl << endl;
+    cout << "\tTransit/Access\t" << numTransit << endl;
+    cout << "\tEnterprise\t" << numEnterprise << endl;
+    cout << "\tContent\t\t" << numContent << endl;
+    cout << "\tTotal by Sum\t" << numTransit + numContent + numEnterprise << endl;
+    cout << "\tTotal Int Variable\t" << total << endl << endl;
     
-    cout << "Type Percentages:" << endl;
-    cout << "Transit/Access\t" << (double)numTransit / (double)total << endl;
-    cout << "Enterprise\t" << (double)numEnterprise / (double)total << endl;
-    cout << "Content\t\t" << (double)numContent / (double)total << endl;
-    cout << "Total by Sum\t" << ((double)numTransit / (double)total) + ((double)numEnterprise / (double)total) + ((double)numContent / (double)total) << endl << endl << endl;
+    cout << "\tType Percentages:" << endl << endl;
+    cout << "\tTransit/Access\t" << (double)numTransit / (double)total << endl;
+    cout << "\tEnterprise\t" << (double)numEnterprise / (double)total << endl;
+    cout << "\tContent\t\t" << (double)numContent / (double)total << endl;
+    cout << "\tTotal by Sum\t" << ((double)numTransit / (double)total) + ((double)numEnterprise / (double)total) + ((double)numContent / (double)total) << endl << endl << endl;
 }
 
 void Graph::printGraphData2(){
@@ -82,38 +83,98 @@ void Graph::printGraphData2(){
         }
     }
     
-    cout << "Graph 2 Data: AS Node Degree Distribution" << endl << endl;
-    cout << "BINS" << endl;
-    cout << "1\t\t" << bin[0] << endl;
-    cout << "2-5\t\t" << bin[1] << endl;
-    cout << "5-100\t\t" << bin[2] << endl;
-    cout << "100-200\t\t" << bin[3] << endl;
-    cout << "200-1000\t" << bin[4] << endl;
-    cout << "1000+\t\t" << bin[5] << endl << endl;
-    cout << "total AS nodes by variable: " << total << endl;
-    cout << "total AS nodes by sum: \t" << bin[0] + bin[1] + bin[2] + bin[3]
+    cout << "----------> GRAPH DATA 2 <----------" << endl;
+    cout << "\tAS Node Degree Distribution:" << endl << endl;
+    cout << "\tBINS" << endl;
+    cout << "\t1\t\t" << bin[0] << endl;
+    cout << "\t2-5\t\t" << bin[1] << endl;
+    cout << "\t5-100\t\t" << bin[2] << endl;
+    cout << "\t100-200\t\t" << bin[3] << endl;
+    cout << "\t200-1000\t" << bin[4] << endl;
+    cout << "\t1000+\t\t" << bin[5] << endl << endl;
+    cout << "\t\ttotal AS nodes by variable: " << total << endl;
+    cout << "\t\ttotal AS nodes by sum: \t" << bin[0] + bin[1] + bin[2] + bin[3]
     + bin[4] + bin[5] + null << endl << endl;
     
 }
 
 void Graph::printGraphData3(){
     getIPSpace();
+    
+    //TODO: print proper bins
+    cout << "----------> GRAPH DATA 3 <----------" << endl;
 }
 
 void Graph::printGraphData4(){
+    int total;
+    int nonCat = 0;
+    int numTransit = 0;
+    int numContent = 0;
+    int numEnterprise = 0;
+    
+    /* Count number of each type */
+    for (map<int, Node *>::iterator it = node.begin(); it != node.end(); ++it){
+        int deg;
+        switch(it->second->type){
+            case TRANSIT_ACCESS:
+                if(it->second->customers.size() > 0){
+                    numTransit++;
+                }
+                
+                nonCat++;
+                break;
+            case CONTENT:
+                if(!it->second->customers.size() && it->second->degreeP2P > 0){
+                    numContent++;
+                }
+                
+                nonCat++;
+                break;
+            case ENTERPRISE:
+                deg = it->second->degreeP2P + it->second->degreeCustomer;
+                if(deg <= 2 && !it->second->customers.size() && !it->second->degreeP2P){
+                    numEnterprise++;
+                }
+                
+                nonCat++;
+                break;
+            case NONE:
+                /* Do nothing */
+                break;
+        }
+    }
+    
+    total = numTransit + numContent + numEnterprise;
+    
+    cout << "----------> GRAPH DATA 4 <----------" << endl;
+    cout << "\tType Totals:" << endl << endl;
+    cout << "\tTransit/Access\t" << numTransit << endl;
+    cout << "\tEnterprise\t" << numEnterprise << endl;
+    cout << "\tContent\t\t" << numContent << endl;
+    cout << "\tTotal\t" << total << endl;
+    cout << "\tNo Catagory\t" << nonCat << endl << endl;
+    
+    cout << "\tType Percentages:" << endl << endl;
+    cout << "\tTransit/Access\t" << (double)numTransit / (double)total << endl;
+    cout << "\tEnterprise\t" << (double)numEnterprise / (double)total << endl;
+    cout << "\tContent\t\t" << (double)numContent / (double)total << endl;
+    cout << "\tTotal by Sum\t" << ((double)numTransit / (double)total) + ((double)numEnterprise / (double)total) + ((double)numContent / (double)total) << endl << endl << endl;
     
 }
 
 void Graph::printTableData1(){
     
+    cout << "----------> TABLE DATA 1 <----------" << endl;
 }
 
 void Graph::printTableData2(){
     
+    cout << "----------> TABLE DATA 2 <----------" << endl;
 }
 
 void Graph::printTableData3(){
     
+    cout << "----------> TABLE DATA 3 <----------" << endl;
 }
 
 void Graph::getASClass(){
