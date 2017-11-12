@@ -8,8 +8,8 @@
 #include "node.hpp"
 
 int Node::getDegree(){
-    return this->degreeP2P + this->degreeCustomer;
-    //return this->degreeP2P + this->degreeProvider;
+    //return this->degreeP2P + this->degreeCustomer;
+    return this->degreeP2P + this->degreeProvider;
     //return this->degreeP2P + this->degreeCustomer + this->degreeProvider;
 }
 

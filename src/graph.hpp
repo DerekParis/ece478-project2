@@ -24,6 +24,13 @@ typedef struct Clique {
     }
 } Clique;
 
+typedef struct Rank {
+    Node *node;
+    int rank;
+    int advertisedIP;
+    int uniqueIP;
+} Rank;
+
 class Graph {
 private:
     string classFile = "input/classification-input.txt";
@@ -32,12 +39,15 @@ private:
     string organizationsFile = "input/organizations-input.txt";
     map<int, Node *> node;
     vector<Clique> allCliques;
+    vector<Rank> rankList;
     
     void getASClass();
     void getASRelation();
     void getIPSpace();
     void getTier1AS();
     void getOrganizationNames();
+    void getASRank();
+    int getASRankHelper(Node *node);
     vector<string> split(string s, string delimiter);
     
 public:
@@ -49,5 +59,7 @@ public:
     void printTableData2();
     void printTableData3();
 };
+
+bool compByCustomer(const Rank &r1, const Rank &r2);
 
 #endif /* graph_hpp */

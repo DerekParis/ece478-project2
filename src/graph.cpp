@@ -88,8 +88,8 @@ void Graph::printGraphData2(){
     cout << "\t100-200\t\t" << bin[3] << endl;
     cout << "\t200-1000\t" << bin[4] << endl;
     cout << "\t1000+\t\t" << bin[5] << endl << endl;
-    cout << "\t\ttotal AS nodes by variable: " << total << endl;
-    cout << "\t\ttotal AS nodes by sum: \t" << bin[0] + bin[1] + bin[2] + bin[3]
+    cout << "\ttotal AS nodes by variable: " << total << endl;
+    cout << "\ttotal AS nodes by sum: \t" << bin[0] + bin[1] + bin[2] + bin[3]
     + bin[4] + bin[5] + null << endl << endl;
     
 }
@@ -159,9 +159,9 @@ void Graph::printGraphData4(){
 }
 
 void Graph::printTableData1(){
+    getTier1AS();
     
     cout << "----------> TABLE DATA 1 <----------" << endl;
-    getTier1AS();
     
     /* Get largest Clique */
     Clique *largest = &allCliques.front();
@@ -179,8 +179,13 @@ void Graph::printTableData1(){
 }
 
 void Graph::printTableData2(){
+    getASRank();
     
     cout << "----------> TABLE DATA 2 <----------" << endl;
+    for(int i = 0; i < 25; i++){
+        cout << "Rank: " << i+1 << ", AS #: " << rankList.at(i).node->ASnum << ", Degree: " << rankList.at(i).node->getDegree() <<
+        ", AS Name: " << rankList.at(i).node->name << ", Customers: " << rankList.at(i).rank << endl;
+    }
 }
 
 void Graph::printTableData3(){
@@ -440,6 +445,32 @@ void Graph::getOrganizationNames(){
     }
 }
 
+void Graph::getASRank(){
+    
+    for (map<int, Node *>::iterator it = node.begin(); it != node.end(); ++it){
+        Rank newRank;
+        newRank.node = it->second;
+        newRank.rank = getASRankHelper(it->second);
+        rankList.push_back(newRank);
+    }
+    
+    sort(rankList.begin(), rankList.end(), compByCustomer);
+    
+}
+
+int Graph::getASRankHelper(Node *node){
+    
+    int num = 0;
+    for(auto &i : node->link){
+        if(i->type == P2C_TYPE && node == i->p2c.provider){
+            num++;
+            num += getASRankHelper(i->p2c.customer);
+        }
+    }
+    
+    return num;
+}
+
 vector<string> Graph::split(string s, string delimiter){
     vector<string> list;
     size_t pos = 0;
@@ -451,4 +482,8 @@ vector<string> Graph::split(string s, string delimiter){
     }
     list.push_back(s);
     return list;
+}
+
+bool compByCustomer(const Rank &r1, const Rank &r2) {
+    return r1.rank > r2.rank;
 }
