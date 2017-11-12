@@ -380,13 +380,15 @@ void Graph::getTier1AS(){
         vector<Node *> clique;
         clique.push_back(degreeSort.front());
         degreeSort.erase(degreeSort.begin());
+        int i = 0;
+        
         while(1){
             Node *test = degreeSort.front();
             bool inClique;
             for(auto &i : clique){
                 inClique = false;
                 for(auto &j : i->link){
-                    if(test == j->p2p.peer2 || test == j->p2p.peer1 || test == j->p2c.customer){
+                    if(test == j->p2p.peer2 || test == j->p2p.peer1 || test == j->p2c.customer || test == j->p2c.provider){
                         inClique = true;
                         break;
                     }
@@ -397,8 +399,8 @@ void Graph::getTier1AS(){
             
             if(!inClique) break;
             
-            clique.push_back(degreeSort.front());
-            degreeSort.erase(degreeSort.begin());
+            clique.push_back(degreeSort.at(i));
+            i++;
         }
         
         Clique newClique(clique, clique.size());
