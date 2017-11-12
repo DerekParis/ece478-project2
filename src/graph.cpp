@@ -81,8 +81,6 @@ void Graph::printGraphData2(){
             /* no links */
         }
     }
-
-    cout << null << endl;
     
     cout << "Graph 2 Data: AS Node Degree Distribution" << endl << endl;
     cout << "BINS" << endl;
@@ -99,7 +97,7 @@ void Graph::printGraphData2(){
 }
 
 void Graph::printGraphData3(){
-    
+    getIPSpace();
 }
 
 void Graph::printGraphData4(){
@@ -222,12 +220,63 @@ void Graph::getASRelation(){
                 break;
             case P2C_TYPE:
                 newLink->p2c.provider = node1;
+                node1->customers.push_back(node2);
                 newLink->p2c.customer = node2;
                 node1->degreeProvider++;
                 node2->degreeCustomer++;
                 break;
         }
     }
+}
+
+void Graph::getIPSpace(){
+    fstream in;
+    
+    in.open(routeFile.c_str());
+    
+    /* if file is available, open and read */
+    if (!in.is_open()) {
+        cout << "No input file found with the name: " << classFile << endl;
+        return;
+    }
+    
+    while(!in.eof()){
+        string line;
+        vector<string> splitLine;
+        getline(in, line);
+        
+        splitLine = split(line, "\t");
+        if(splitLine.size() < 3){
+            continue;
+        }
+        
+        vector<string> nodeSet = split(splitLine.at(2), "_");
+        for(auto &i : nodeSet){
+            vector<string> nodes = split(i, ",");
+            for(auto &i : nodes){
+                int as;
+                Node *node1;
+                try {
+                    as = stoi(i);
+                    node1 = node[as];
+                }
+                catch(out_of_range& e){
+                    /* Ignore */
+                }
+                
+                if(node1 == NULL){
+                    Node *newNode = new Node();
+                    node[as] = newNode;
+                    node1 = node[as];
+                }
+                
+                node1->space.prefix = splitLine.at(0);
+                node1->space.length = stoi(splitLine.at(1));
+                
+            }
+        }
+    }
+    
 }
 
 vector<string> Graph::split(string s, string delimiter){

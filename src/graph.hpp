@@ -25,6 +25,7 @@ private:
     
     void getASClass();
     void getASRelation();
+    void getIPSpace();
     vector<string> split(string s, string delimiter);
     
 public:

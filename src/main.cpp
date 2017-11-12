@@ -12,7 +12,7 @@ int main() {
     
     AS_graph.printGraphData1();
     AS_graph.printGraphData2();
-//    AS_graph.printGraphData3();
+    AS_graph.printGraphData3();
 //    AS_graph.printGraphData4();
 //    AS_graph.printTableData1();
 //    AS_graph.printTableData2();
