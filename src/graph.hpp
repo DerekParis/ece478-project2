@@ -16,16 +16,28 @@
 #include <vector>
 #include <fstream>
 
+typedef struct Clique {
+    vector<Node *> nodes;
+    int size;
+    Clique(vector<Node *> c, int s) {
+        nodes = c; size = s;
+    }
+} Clique;
+
 class Graph {
 private:
     string classFile = "input/classification-input.txt";
     string relationFile = "input/relationship-input.txt";
     string routeFile = "input/routeviews-input.txt";
+    string organizationsFile = "input/organizations-input.txt";
     map<int, Node *> node;
+    vector<Clique> allCliques;
     
     void getASClass();
     void getASRelation();
     void getIPSpace();
+    void getTier1AS();
+    void getOrganizationNames();
     vector<string> split(string s, string delimiter);
     
 public:

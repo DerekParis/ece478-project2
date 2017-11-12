@@ -33,9 +33,16 @@ public:
     vector<Link *> link;
     vector<Node *> customers;
     struct IPSpace space;
+    string name;
+    int ASnum;
     int degreeP2P = 0;
     int degreeProvider = 0;
     int degreeCustomer = 0;
+    
+    int getDegree();
+    
 };
+
+bool compByDeg(Node *n1, Node *n2);
 
 #endif /* node_hpp */

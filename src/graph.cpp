@@ -59,11 +59,7 @@ void Graph::printGraphData2(){
     
     /* Count number of each type */
     for (map<int, Node *>::iterator it = node.begin(); it != node.end(); ++it){
-        
-        /* Change the degree value if we need to change degree definition */
-        //int deg = it->second->degreeP2P + it->second->degreeCustomer + it->second->degreeProvider;
-        int deg = it->second->degreeP2P + it->second->degreeCustomer; //<<<<< I think its this definition 
-        //int deg = it->second->degreeP2P + it->second->degreeProvider;
+        int deg = it->second->getDegree();
 
         if(deg == 1){
             bin[0]++;
@@ -131,7 +127,7 @@ void Graph::printGraphData4(){
                 nonCat++;
                 break;
             case ENTERPRISE:
-                deg = it->second->degreeP2P + it->second->degreeCustomer;
+                deg = it->second->getDegree();
                 if(deg <= 2 && !it->second->customers.size() && !it->second->degreeP2P){
                     numEnterprise++;
                 }
@@ -165,6 +161,21 @@ void Graph::printGraphData4(){
 void Graph::printTableData1(){
     
     cout << "----------> TABLE DATA 1 <----------" << endl;
+    getTier1AS();
+    
+    /* Get largest Clique */
+    Clique *largest = &allCliques.front();
+    for(int i = 0; i < allCliques.size(); i++){
+        if(largest->size < allCliques.at(i).size){
+            largest = &allCliques.at(i);
+        }
+    }
+    
+    for(auto &i : largest->nodes){
+        cout << "AS: " << i->ASnum << ", NAME: " << i->name << ", DEGREE: " << i->getDegree() << endl;
+    }
+    
+    cout << "SIZE: " << largest->size << endl;
 }
 
 void Graph::printTableData2(){
@@ -194,8 +205,12 @@ void Graph::getASClass(){
         getline(in, line);
         
         splitLine = split(line, "|");
+        if(splitLine.size() < 3){
+            continue;
+        }
         
         Node *newNode = new Node();
+        newNode->ASnum = stoi(splitLine.front());
         switch (line.back()) {
             case 's':
                 newNode->type = TRANSIT_ACCESS;
@@ -258,11 +273,13 @@ void Graph::getASRelation(){
         Node *node2 = node[as2];
         if(node1 == NULL){
             Node *newNode = new Node();
+            newNode->ASnum = as1;
             node[as1] = newNode;
             node1 = node[as1];
         }
         if(node2 == NULL){
             Node *newNode = new Node();
+            newNode->ASnum = as2;
             node[as2] = newNode;
             node2 = node[as2];
         }
@@ -327,6 +344,7 @@ void Graph::getIPSpace(){
                 
                 if(node1 == NULL){
                     Node *newNode = new Node();
+                    newNode->ASnum = as;
                     node[as] = newNode;
                     node1 = node[as];
                 }
@@ -337,7 +355,89 @@ void Graph::getIPSpace(){
             }
         }
     }
+}
+
+void Graph::getTier1AS(){
+    vector<Node *> degreeSort;
     
+    getOrganizationNames();
+    
+    /* Add all nodes from map to vector */
+    for (map<int, Node *>::iterator it = node.begin(); it != node.end(); ++it){
+        degreeSort.push_back(it->second);
+    }
+    
+    /* Sort function by degree */
+    sort(degreeSort.begin(), degreeSort.end(), compByDeg);
+ 
+    /* Calculate largest clique */
+    while(degreeSort.size() > 0){
+        vector<Node *> clique;
+        clique.push_back(degreeSort.front());
+        degreeSort.erase(degreeSort.begin());
+        while(1){
+            Node *test = degreeSort.front();
+            bool inClique;
+            for(auto &i : clique){
+                inClique = false;
+                for(auto &j : i->link){
+                    if(test == j->p2p.peer2 || test == j->p2p.peer1 || test == j->p2c.customer){
+                        inClique = true;
+                        break;
+                    }
+                }
+                
+                if(!inClique) break;
+            }
+            
+            if(!inClique) break;
+            
+            clique.push_back(degreeSort.front());
+            degreeSort.erase(degreeSort.begin());
+        }
+        
+        Clique newClique(clique, clique.size());
+        allCliques.push_back(newClique);
+    }
+}
+
+void Graph::getOrganizationNames(){
+    fstream in;
+    
+    in.open(organizationsFile.c_str());
+    
+    /* if file is available, open and read */
+    if (!in.is_open()) {
+        cout << "No input file found with the name: " << classFile << endl;
+        return;
+    }
+    
+    while(!in.eof()){
+        string line;
+        vector<string> splitLine;
+        getline(in, line);
+        
+        splitLine = split(line, "|");
+        if(splitLine.size() < 3){
+            continue;
+        }
+        
+        int as;
+        Node *node1;
+        try {
+            as = stoi(splitLine.at(0));
+            if (node.count(as) != 0) {
+                node1 = node[as];
+                node1->name = splitLine.at(2);
+            }
+        }
+        catch(out_of_range& e){
+            /* Ignore */
+        }
+        catch(invalid_argument& e){
+            /* Ignore */
+        }
+    }
 }
 
 vector<string> Graph::split(string s, string delimiter){
