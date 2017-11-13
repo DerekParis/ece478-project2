@@ -14,6 +14,6 @@ int main() {
     AS_graph.printGraphData4();
     AS_graph.printTableData1();
     AS_graph.printTableData2();
-//    AS_graph.printTableData3();
+    AS_graph.printTableData3();
     
 }

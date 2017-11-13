@@ -84,9 +84,9 @@ void Graph::printGraphData2(){
     cout << "\tBINS" << endl;
     cout << "\t1\t\t" << bin[0] << endl;
     cout << "\t2-5\t\t" << bin[1] << endl;
-    cout << "\t5-100\t\t" << bin[2] << endl;
-    cout << "\t100-200\t\t" << bin[3] << endl;
-    cout << "\t200-1000\t" << bin[4] << endl;
+    cout << "\t6-100\t\t" << bin[2] << endl;
+    cout << "\t101-200\t\t" << bin[3] << endl;
+    cout << "\t201-1000\t" << bin[4] << endl;
     cout << "\t1000+\t\t" << bin[5] << endl << endl;
     cout << "\ttotal AS nodes by variable: " << total << endl;
     cout << "\ttotal AS nodes by sum: \t" << bin[0] + bin[1] + bin[2] + bin[3]
@@ -95,10 +95,49 @@ void Graph::printGraphData2(){
 }
 
 void Graph::printGraphData3(){
-    getIPSpace();
+    int total;
+    int bin[7] = {0};
+    int null = 0;
     
-    //TODO: print proper bins
+    getIPSpace();
+    total = node.size();
+    
+    for (map<int, Node *>::iterator it = node.begin(); it != node.end(); ++it){
+        int space = it->second->totalIPSpace;
+        
+        if(space >= 1 && space < pow(2, 6)){
+            bin[0]++;
+        }else if(space >= pow(2, 6) && space < pow(2, 10)){
+            bin[1]++;
+        }else if(space >= pow(2, 10) && space < pow(2, 14)){
+            bin[2]++;
+        }else if(space >= pow(2, 14) && space < pow(2, 18)){
+            bin[3]++;
+        }else if(space >= pow(2, 18) && space < pow(2, 22)){
+            bin[4]++;
+        }else if(space >= pow(2, 22) && space < pow(2, 26)){
+            bin[5]++;
+        }else if(space >= pow(2, 26)){
+            bin[6]++;
+        }else{
+            null++;
+            /* no defined ip space */
+        }
+    }
+    
     cout << "----------> GRAPH DATA 3 <----------" << endl;
+    cout << "\tAS IP Space Distribution:" << endl << endl;
+    cout << "\tBINS" << endl;
+    cout << "\t2^0  - 2^6\t:\t" << bin[0] << endl;
+    cout << "\t2^6  - 2^10\t:\t" << bin[1] << endl;
+    cout << "\t2^10 - 2^14\t:\t" << bin[2] << endl;
+    cout << "\t2^14 - 2^18\t:\t" << bin[3] << endl;
+    cout << "\t2^18 - 2^22\t:\t" << bin[4] << endl;
+    cout << "\t2^22 - 2^26\t:\t" << bin[5] << endl;
+    cout << "\t2^26 - 2^32\t:\t" << bin[6] << endl << endl;
+    cout << "\ttotal AS nodes by variable: " << total << endl;
+    cout << "\ttotal AS nodes by sum: \t" << bin[0] + bin[1] + bin[2] + bin[3] + bin[4] +
+            bin[5] + bin[6] + null << endl << endl;
 }
 
 void Graph::printGraphData4(){
@@ -116,26 +155,21 @@ void Graph::printGraphData4(){
                 if(it->second->customers.size() > 0){
                     numTransit++;
                 }
-                
-                nonCat++;
                 break;
             case CONTENT:
                 if(!it->second->customers.size() && it->second->degreeP2P > 0){
                     numContent++;
                 }
-                
-                nonCat++;
                 break;
             case ENTERPRISE:
                 deg = it->second->getDegree();
                 if(deg <= 2 && !it->second->customers.size() && !it->second->degreeP2P){
                     numEnterprise++;
                 }
-                
-                nonCat++;
                 break;
             case NONE:
                 /* Do nothing */
+                nonCat++;
                 break;
         }
     }
@@ -180,18 +214,34 @@ void Graph::printTableData1(){
 
 void Graph::printTableData2(){
     getASRank();
-    
+
+    sort(rankList.begin(), rankList.end(), compByASes);
     cout << "----------> TABLE DATA 2 <----------" << endl;
+    
     for(int i = 0; i < 25; i++){
-        cout << "Rank: " << i+1 << ", AS #: " << rankList.at(i).node->ASnum << ", Degree: " << rankList.at(i).node->getDegree() <<
-        ", AS Name: " << rankList.at(i).node->name << ", Customers: " << rankList.at(i).rank << endl;
+        cout << "Rank: " << i+1 << ", AS #: " << rankList.at(i)->ASnum << ", Degree: " << rankList.at(i)->getDegree() <<
+        ", AS Name: " << rankList.at(i)->name << ", # ASes: " << rankList.at(i)->nodeRank.ASes << ", # Prefixes: " << rankList.at(i)->nodeRank.advertisedIP <<
+        ", # IPs: " << rankList.at(i)->nodeRank.uniqueIP << ", AS Percent " << (double)rankList.at(i)->nodeRank.ASes / (double)node.size() << ", Pre Percent " <<
+        (double)rankList.at(i)->nodeRank.advertisedIP / (double)727792<< ", IP Percent " << (double)rankList.at(i)->nodeRank.uniqueIP / (double)pow(2, 32) << endl;
     }
 }
 
 void Graph::printTableData3(){
     
+    sort(rankList.begin(), rankList.end(), compByPer);
     cout << "----------> TABLE DATA 3 <----------" << endl;
+
+    for(int i = 0; i < 25; i++){
+        cout << "Rank: " << i+1 << ", AS #: " << rankList.at(i)->ASnum << ", Degree: " << rankList.at(i)->getDegree() <<
+        ", AS Name: " << rankList.at(i)->name << ", # ASes: " << rankList.at(i)->nodeRank.ASes << ", # Prefixes: " << rankList.at(i)->nodeRank.advertisedIP <<
+        ", # IPs: " << rankList.at(i)->nodeRank.uniqueIP << ", AS Percent " << (double)rankList.at(i)->nodeRank.ASes / (double)node.size() << ", Pre Percent " <<
+        (double)rankList.at(i)->nodeRank.advertisedIP / (double)727792<< ", IP Percent " << (double)rankList.at(i)->nodeRank.uniqueIP / (double)pow(2, 32) << endl;
+    }
 }
+
+
+
+
 
 void Graph::getASClass(){
     fstream in;
@@ -354,12 +404,64 @@ void Graph::getIPSpace(){
                     node1 = node[as];
                 }
                 
-                node1->space.prefix = splitLine.at(0);
-                node1->space.length = stoi(splitLine.at(1));
-                
+                /* Add new IPSpace */
+                IPSpace newSpace;
+                newSpace.prefix = splitLine.at(0);
+                newSpace.length = stoi(splitLine.at(1));
+                newSpace.space = 32 - newSpace.length;
+                node1->space.push_back(newSpace);
+                node1->totalIPSpace += pow(2, newSpace.space);
             }
         }
     }
+    
+    getParentSpace();
+}
+
+void Graph::getParentSpace(){
+    
+    for (map<int, Node *>::iterator it = node.begin(); it != node.end(); ++it){
+        
+        for(auto &i : it->second->space){
+            vector<string> prefixParts = split(i.prefix, ".");
+            vector<int> nonZeroParts;
+            for(int c = 0; c < prefixParts.size(); c++){
+                if(stoi(prefixParts.at(c)) != 0){
+                    nonZeroParts.push_back(stoi(prefixParts.at(c)));
+                }
+            }
+            
+            for(auto &j : it->second->customers){
+                for(auto k : j->space){
+                    if(k.parent == NULL){
+                        vector<string> prefixParts2 = split(k.prefix, ".");
+                        vector<int> nonZeroParts2;
+                        for(int l = 0; l < prefixParts2.size(); l++){
+                            if(stoi(prefixParts2.at(l)) != 0){
+                                nonZeroParts2.push_back(stoi(prefixParts.at(l)));
+                            }
+                        }
+                        
+                        if(nonZeroParts2.size() >= nonZeroParts.size()){
+                        
+                            bool match = true;
+                            for(int p = 0; p < nonZeroParts.size(); p++){
+                                if(nonZeroParts.at(p) != nonZeroParts2.at(p)){
+                                    match = false;
+                                    cout << "HERE\n";
+                                }
+                            }
+                            if(match){
+                                k.parent = it->second;
+                                //cout << "ASSIGNED\n";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
 }
 
 void Graph::getTier1AS(){
@@ -376,7 +478,7 @@ void Graph::getTier1AS(){
     sort(degreeSort.begin(), degreeSort.end(), compByDeg);
  
     /* Calculate largest clique */
-    while(degreeSort.size() > 0){
+    //while(degreeSort.size() > 0){
         vector<Node *> clique;
         clique.push_back(degreeSort.front());
         degreeSort.erase(degreeSort.begin());
@@ -405,7 +507,7 @@ void Graph::getTier1AS(){
         
         Clique newClique(clique, clique.size());
         allCliques.push_back(newClique);
-    }
+    //}
 }
 
 void Graph::getOrganizationNames(){
@@ -448,29 +550,48 @@ void Graph::getOrganizationNames(){
 }
 
 void Graph::getASRank(){
-    
+
     for (map<int, Node *>::iterator it = node.begin(); it != node.end(); ++it){
-        Rank newRank;
-        newRank.node = it->second;
-        newRank.rank = getASRankHelper(it->second);
-        rankList.push_back(newRank);
+        map<int, Node *> visited;
+        getASRankHelper(it->second, visited);
+        rankList.push_back(it->second);
     }
-    
-    sort(rankList.begin(), rankList.end(), compByCustomer);
     
 }
 
-int Graph::getASRankHelper(Node *node){
+void Graph::getASRankHelper(Node *node, map<int, Node *> &visited){
+    vector<Node *> cust;
     
-    int num = 0;
-    for(auto &i : node->link){
-        if(i->type == P2C_TYPE && node == i->p2c.provider){
-            num++;
-            num += getASRankHelper(i->p2c.customer);
+    visited[node->ASnum] = node;
+    for(int i = 0; i < node->customers.size(); i++){
+        if(visited.count(node->customers.at(i)->ASnum) == 0){
+            cust.push_back(node->customers.at(i));
         }
     }
     
-    return num;
+    int num = 0;
+    int prefix = 0;
+    int ip = 0;
+    while(cust.size() > 0){
+        Node *temp = cust.front();
+        if(visited.count(temp->ASnum) == 0){
+            getASRankHelper(temp, visited);
+            num += temp->nodeRank.ASes;
+            prefix += temp->nodeRank.advertisedIP;
+            for(auto i : temp->space){
+                if(i.parent != node){
+                    ip += pow(2, i.space);
+                }
+            }
+            num++;
+        }
+        cust.erase(cust.begin());
+    }
+    
+    node->nodeRank.advertisedIP = node->space.size() + prefix;
+    node->nodeRank.ASes = num;
+    node->nodeRank.uniqueIP = ip + node->totalIPSpace;
+    
 }
 
 vector<string> Graph::split(string s, string delimiter){
@@ -484,8 +605,4 @@ vector<string> Graph::split(string s, string delimiter){
     }
     list.push_back(s);
     return list;
-}
-
-bool compByCustomer(const Rank &r1, const Rank &r2) {
-    return r1.rank > r2.rank;
 }

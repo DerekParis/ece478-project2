@@ -15,6 +15,7 @@
 #include <map>
 #include <vector>
 #include <fstream>
+#include <cmath>
 
 typedef struct Clique {
     vector<Node *> nodes;
@@ -24,13 +25,6 @@ typedef struct Clique {
     }
 } Clique;
 
-typedef struct Rank {
-    Node *node;
-    int rank;
-    int advertisedIP;
-    int uniqueIP;
-} Rank;
-
 class Graph {
 private:
     string classFile = "input/classification-input.txt";
@@ -39,7 +33,8 @@ private:
     string organizationsFile = "input/organizations-input.txt";
     map<int, Node *> node;
     vector<Clique> allCliques;
-    vector<Rank> rankList;
+    vector<Node *> rankList;
+    long TotIPSpace = pow(2, 32);
     
     void getASClass();
     void getASRelation();
@@ -47,7 +42,8 @@ private:
     void getTier1AS();
     void getOrganizationNames();
     void getASRank();
-    int getASRankHelper(Node *node);
+    void getParentSpace();
+    void getASRankHelper(Node *node, map<int, Node *> &visited);
     vector<string> split(string s, string delimiter);
     
 public:
@@ -59,7 +55,5 @@ public:
     void printTableData2();
     void printTableData3();
 };
-
-bool compByCustomer(const Rank &r1, const Rank &r2);
 
 #endif /* graph_hpp */
