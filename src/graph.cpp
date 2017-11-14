@@ -478,7 +478,7 @@ void Graph::getTier1AS(){
     sort(degreeSort.begin(), degreeSort.end(), compByDeg);
  
     /* Calculate largest clique */
-    //while(degreeSort.size() > 0){
+    while(degreeSort.size() > 0){
         vector<Node *> clique;
         clique.push_back(degreeSort.front());
         degreeSort.erase(degreeSort.begin());
@@ -507,7 +507,7 @@ void Graph::getTier1AS(){
         
         Clique newClique(clique, clique.size());
         allCliques.push_back(newClique);
-    //}
+    }
 }
 
 void Graph::getOrganizationNames(){
